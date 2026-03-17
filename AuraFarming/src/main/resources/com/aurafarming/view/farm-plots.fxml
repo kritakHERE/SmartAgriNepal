@@ -11,15 +11,17 @@
     <HBox spacing="8">
         <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
         <ComboBox fx:id="districtCombo"/>
+        <ComboBox fx:id="farmTagCombo" promptText="Farm Tag"/>
         <ComboBox fx:id="unitCombo" promptText="Farm Unit"/>
         <TextField fx:id="farmAreaField" promptText="Farm Area"/>
         <Button text="Create Farm" onAction="#onCreateFarm" styleClass="primary-btn"/>
     </HBox>
     <HBox spacing="8">
-        <TextField fx:id="farmIdForPlotField" promptText="Farm ID for plot / delete"/>
+        <ComboBox fx:id="farmCombo" promptText="Select Farm"/>
+        <ComboBox fx:id="plotCombo" promptText="Existing Plots"/>
         <TextField fx:id="plotAreaField" promptText="Plot Area"/>
         <Button text="Create Plot" onAction="#onCreatePlot"/>
         <Button text="Delete Farm" onAction="#onDeleteFarm"/>
     </HBox>
-    <TextArea fx:id="outputArea" prefHeight="320"/>
+    <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

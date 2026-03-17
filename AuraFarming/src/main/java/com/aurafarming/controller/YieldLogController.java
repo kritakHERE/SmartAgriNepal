@@ -1,8 +1,10 @@
 package com.aurafarming.controller;
 
 import com.aurafarming.model.District;
+import com.aurafarming.model.Plot;
 import com.aurafarming.model.Role;
 import com.aurafarming.service.SessionContext;
+import com.aurafarming.service.FarmPlotService;
 import com.aurafarming.service.YieldLogService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -16,7 +18,7 @@ public class YieldLogController {
     @FXML
     private TextField farmerIdField;
     @FXML
-    private TextField plotIdField;
+    private ComboBox<String> plotCombo;
     @FXML
     private ComboBox<District> districtCombo;
     @FXML
@@ -31,6 +33,7 @@ public class YieldLogController {
     private TextArea outputArea;
 
     private final YieldLogService yieldLogService = new YieldLogService();
+    private final FarmPlotService farmPlotService = new FarmPlotService();
 
     @FXML
     public void initialize() {
@@ -38,6 +41,17 @@ public class YieldLogController {
         districtCombo.getSelectionModel().selectFirst();
         cropCombo.setItems(FXCollections.observableArrayList(CROPS));
         cropCombo.getSelectionModel().selectFirst();
+
+        var plotIds = farmPlotService.getPlotsForUser(SessionContext.getCurrentUser()).stream().map(Plot::getPlotId)
+                .toList();
+        plotCombo.setItems(FXCollections.observableArrayList(plotIds));
+        if (!plotIds.isEmpty()) {
+            plotCombo.getSelectionModel().selectFirst();
+        }
+        plotCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            updateDistrictFromPlot(newValue);
+        });
+        updateDistrictFromPlot(plotCombo.getValue());
 
         if (SessionContext.getCurrentUser().getRole() == Role.FARMER) {
             farmerIdField.setDisable(true);
@@ -53,11 +67,30 @@ public class YieldLogController {
     public void onSave() {
         String farmerId = farmerIdField.getText().isBlank() ? SessionContext.getCurrentUser().getUserId()
                 : farmerIdField.getText();
-        yieldLogService.save(SessionContext.getCurrentUser(), farmerId, plotIdField.getText(), districtCombo.getValue(),
+        if (plotCombo.getValue() == null || plotCombo.getValue().isBlank()) {
+            outputArea.setText("Create farm and plot first, then select the plot.");
+            return;
+        }
+        yieldLogService.save(SessionContext.getCurrentUser(), farmerId, plotCombo.getValue(), districtCombo.getValue(),
                 cropCombo.getValue(),
                 Double.parseDouble(estimatedField.getText()), Double.parseDouble(actualField.getText()),
                 harvestDatePicker.getValue());
         refresh();
+    }
+
+    private void updateDistrictFromPlot(String plotId) {
+        if (plotId == null || plotId.isBlank()) {
+            return;
+        }
+        var selectedPlot = farmPlotService.getPlotsForUser(SessionContext.getCurrentUser()).stream()
+                .filter(p -> p.getPlotId().equalsIgnoreCase(plotId)).findFirst().orElse(null);
+        if (selectedPlot == null) {
+            return;
+        }
+        var farm = farmPlotService.getFarmById(selectedPlot.getFarmId());
+        if (farm != null && farm.getDistrict() != null) {
+            districtCombo.getSelectionModel().select(farm.getDistrict());
+        }
     }
 
     private void refresh() {

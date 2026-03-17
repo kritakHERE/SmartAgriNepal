@@ -16,5 +16,5 @@
         <TextField fx:id="probabilityField" promptText="Probability %"/>
         <Button fx:id="saveButton" text="Save Alert" onAction="#onSave"/>
     </HBox>
-    <TextArea fx:id="outputArea" prefHeight="320"/>
+    <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

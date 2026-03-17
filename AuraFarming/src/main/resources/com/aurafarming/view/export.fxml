@@ -16,5 +16,5 @@
         <TextField fx:id="farmerField" promptText="Farmer ID (optional)"/>
         <Button text="Export CSV" onAction="#onExport" styleClass="primary-btn"/>
     </HBox>
-    <TextArea fx:id="outputArea" prefHeight="320" promptText="Export result path will show here."/>
+    <TextArea fx:id="outputArea" prefHeight="320" promptText="Export result path will show here." editable="false"/>
 </VBox>

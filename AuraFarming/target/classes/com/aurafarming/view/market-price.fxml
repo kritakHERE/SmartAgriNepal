@@ -20,5 +20,5 @@
         <Button text="View History" onAction="#onHistory"/>
         <Label fx:id="trendLabel" text="Trend: -"/>
     </HBox>
-    <TextArea fx:id="outputArea" prefHeight="320"/>
+    <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

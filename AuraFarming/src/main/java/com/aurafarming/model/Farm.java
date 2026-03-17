@@ -10,16 +10,19 @@ public class Farm implements Serializable {
     private String farmId;
     private String farmerId;
     private District district;
+    private String farmTag;
     private String measurementUnit;
     private double totalArea;
 
     public Farm() {
     }
 
-    public Farm(String farmId, String farmerId, District district, String measurementUnit, double totalArea) {
+    public Farm(String farmId, String farmerId, District district, String farmTag, String measurementUnit,
+            double totalArea) {
         this.farmId = farmId;
         this.farmerId = farmerId;
         this.district = district;
+        this.farmTag = farmTag;
         this.measurementUnit = measurementUnit;
         this.totalArea = totalArea;
     }
@@ -46,6 +49,14 @@ public class Farm implements Serializable {
 
     public void setDistrict(District district) {
         this.district = district;
+    }
+
+    public String getFarmTag() {
+        return farmTag;
+    }
+
+    public void setFarmTag(String farmTag) {
+        this.farmTag = farmTag;
     }
 
     public String getMeasurementUnit() {

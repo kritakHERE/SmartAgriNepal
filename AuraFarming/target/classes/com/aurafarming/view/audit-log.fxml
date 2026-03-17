@@ -15,5 +15,5 @@
         <DatePicker fx:id="toDatePicker"/>
         <Button text="Filter" onAction="#onFilter"/>
     </HBox>
-    <TextArea fx:id="outputArea" prefHeight="320"/>
+    <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

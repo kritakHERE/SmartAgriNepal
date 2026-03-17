@@ -8,8 +8,8 @@
     <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
     <Label text="Farmer Management" styleClass="title"/>
     <TextField fx:id="searchField" promptText="Search by id/name/email"/>
-    <Button text="Search" onAction="#onSearch"/>
+    <Button fx:id="searchButton" text="Search" onAction="#onSearch"/>
     <Button text="Deactivate First Match" onAction="#onDeactivate"/>
     <Button text="Reactivate First Match" onAction="#onReactivate"/>
-    <TextArea fx:id="outputArea" prefHeight="320"/>
+    <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

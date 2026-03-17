@@ -10,5 +10,5 @@
     <TextField fx:id="searchField" promptText="Search by id/name/email"/>
     <Button text="Search" onAction="#onSearch"/>
     <Button text="Deactivate First Match" onAction="#onDeactivate"/>
-    <TextArea fx:id="outputArea" prefHeight="320"/>
+    <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

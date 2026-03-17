@@ -2,6 +2,7 @@ package com.aurafarming.controller;
 
 import com.aurafarming.model.Season;
 import com.aurafarming.model.Role;
+import com.aurafarming.service.FarmPlotService;
 import com.aurafarming.service.CropPlanService;
 import com.aurafarming.service.SessionContext;
 import javafx.collections.FXCollections;
@@ -16,7 +17,7 @@ public class CropPlanController {
     @FXML
     private TextField farmerIdField;
     @FXML
-    private TextField plotIdField;
+    private ComboBox<String> plotCombo;
     @FXML
     private ComboBox<String> cropCombo;
     @FXML
@@ -31,6 +32,7 @@ public class CropPlanController {
     private TextArea outputArea;
 
     private final CropPlanService cropPlanService = new CropPlanService();
+    private final FarmPlotService farmPlotService = new FarmPlotService();
     private int score = 0;
 
     @FXML
@@ -39,6 +41,12 @@ public class CropPlanController {
         seasonCombo.getSelectionModel().selectFirst();
         cropCombo.setItems(FXCollections.observableArrayList(CROPS));
         cropCombo.getSelectionModel().selectFirst();
+        var plotIds = farmPlotService.getPlotsForUser(SessionContext.getCurrentUser()).stream()
+                .map(p -> p.getPlotId()).toList();
+        plotCombo.setItems(FXCollections.observableArrayList(plotIds));
+        if (!plotIds.isEmpty()) {
+            plotCombo.getSelectionModel().selectFirst();
+        }
 
         if (SessionContext.getCurrentUser().getRole() == Role.FARMER) {
             farmerIdField.setDisable(true);
@@ -61,10 +69,14 @@ public class CropPlanController {
     public void onSave() {
         String farmerId = farmerIdField.getText().isBlank() ? SessionContext.getCurrentUser().getUserId()
                 : farmerIdField.getText();
+        if (plotCombo.getValue() == null || plotCombo.getValue().isBlank()) {
+            outputArea.setText("Create farm and plot first, then select the plot.");
+            return;
+        }
         if (score == 0) {
             onRecommend();
         }
-        cropPlanService.savePlan(SessionContext.getCurrentUser(), farmerId, plotIdField.getText(),
+        cropPlanService.savePlan(SessionContext.getCurrentUser(), farmerId, plotCombo.getValue(),
                 cropCombo.getValue(),
                 seasonCombo.getValue(), startDatePicker.getValue(), harvestDatePicker.getValue(), score);
         outputArea.setText("Crop plan saved. Total plans: " + cropPlanService.findAll().size());

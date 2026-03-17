@@ -5,6 +5,7 @@ import com.aurafarming.model.User;
 import com.aurafarming.service.SessionContext;
 import com.aurafarming.service.UserService;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -14,12 +15,22 @@ public class FarmerController {
     @FXML
     private TextField searchField;
     @FXML
+    private Button searchButton;
+    @FXML
     private TextArea outputArea;
 
     private final UserService userService = new UserService();
 
     @FXML
     public void initialize() {
+        if (SessionContext.getCurrentUser().getRole() != Role.ADMIN) {
+            searchField.setManaged(false);
+            searchField.setVisible(false);
+            searchButton.setManaged(false);
+            searchButton.setVisible(false);
+            render(userService.search(Role.FARMER, SessionContext.getCurrentUser().getUserId()));
+            return;
+        }
         render(userService.findByRole(Role.FARMER));
     }
 
@@ -31,7 +42,9 @@ public class FarmerController {
     @FXML
     public void onDeactivate() {
         User current = SessionContext.getCurrentUser();
-        List<User> list = userService.search(Role.FARMER, searchField.getText());
+        List<User> list = current.getRole() == Role.ADMIN
+                ? userService.search(Role.FARMER, searchField.getText())
+                : userService.search(Role.FARMER, current.getUserId());
         if (list.isEmpty()) {
             return;
         }
@@ -41,13 +54,17 @@ public class FarmerController {
             return;
         }
         userService.deactivateUser(target.getUserId());
-        render(userService.search(Role.FARMER, searchField.getText()));
+        render(current.getRole() == Role.ADMIN
+                ? userService.search(Role.FARMER, searchField.getText())
+                : userService.search(Role.FARMER, current.getUserId()));
     }
 
     @FXML
     public void onReactivate() {
         User current = SessionContext.getCurrentUser();
-        List<User> list = userService.search(Role.FARMER, searchField.getText());
+        List<User> list = current.getRole() == Role.ADMIN
+                ? userService.search(Role.FARMER, searchField.getText())
+                : userService.search(Role.FARMER, current.getUserId());
         if (list.isEmpty()) {
             return;
         }
@@ -57,7 +74,9 @@ public class FarmerController {
             return;
         }
         userService.reactivateUser(target.getUserId());
-        render(userService.search(Role.FARMER, searchField.getText()));
+        render(current.getRole() == Role.ADMIN
+                ? userService.search(Role.FARMER, searchField.getText())
+                : userService.search(Role.FARMER, current.getUserId()));
     }
 
     private void render(List<User> users) {

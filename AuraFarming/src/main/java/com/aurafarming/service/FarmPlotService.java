@@ -7,6 +7,7 @@ import com.aurafarming.model.*;
 import com.aurafarming.util.IdGenerator;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FarmPlotService {
@@ -27,14 +28,24 @@ public class FarmPlotService {
                 .collect(Collectors.toList());
     }
 
-    public Farm createFarm(User actor, String farmerId, District district, String unit, double area) {
+    public List<Plot> getPlotsForUser(User user) {
+        Set<String> farmIds = getFarmsForUser(user).stream().map(Farm::getFarmId).collect(Collectors.toSet());
+        return plotDAO.findAll().stream().filter(p -> farmIds.contains(p.getFarmId())).collect(Collectors.toList());
+    }
+
+    public Farm getFarmById(String farmId) {
+        return farmDAO.findAll().stream().filter(f -> f.getFarmId().equalsIgnoreCase(farmId)).findFirst().orElse(null);
+    }
+
+    public Farm createFarm(User actor, String farmerId, District district, String farmTag, String unit, double area) {
         if (district == null || unit == null || unit.isBlank() || area <= 0) {
             throw new ValidationException("District, unit and area are required.");
         }
         if (actor.getRole() == Role.FARMER && !actor.getUserId().equalsIgnoreCase(farmerId)) {
             throw new ValidationException("You can only create your own farm.");
         }
-        Farm farm = new Farm(IdGenerator.next("FRM"), farmerId, district, unit, area);
+        Farm farm = new Farm(IdGenerator.next("FRM"), farmerId, district,
+                farmTag == null ? "" : farmTag.trim(), unit, area);
         List<Farm> farms = farmDAO.findAll();
         farms.add(farm);
         farmDAO.saveAll(farms);
@@ -43,6 +54,9 @@ public class FarmPlotService {
     }
 
     public Plot createPlot(User actor, String farmId, double area) {
+        if (farmId == null || farmId.isBlank()) {
+            throw new ValidationException("Please select a farm before creating a plot.");
+        }
         if (area <= 0) {
             throw new ValidationException("Plot area must be positive.");
         }
@@ -57,6 +71,9 @@ public class FarmPlotService {
     }
 
     public void deleteFarm(User actor, String farmId) {
+        if (farmId == null || farmId.isBlank()) {
+            throw new ValidationException("Please select a farm to delete.");
+        }
         List<Farm> farms = farmDAO.findAll();
         boolean removed = farms.removeIf(f -> f.getFarmId().equalsIgnoreCase(farmId));
         if (removed) {
