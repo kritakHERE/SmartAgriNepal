@@ -12,10 +12,12 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 
 public class MarketPriceController {
+    private static final String[] CROPS = { "Rice", "Wheat", "Mustard", "Maize", "Millet", "Vegetable" };
+
     @FXML
     private ComboBox<District> districtCombo;
     @FXML
-    private TextField cropField;
+    private ComboBox<String> cropCombo;
     @FXML
     private TextField priceField;
     @FXML
@@ -35,6 +37,8 @@ public class MarketPriceController {
     public void initialize() {
         districtCombo.setItems(FXCollections.observableArrayList(District.values()));
         districtCombo.getSelectionModel().selectFirst();
+        cropCombo.setItems(FXCollections.observableArrayList(CROPS));
+        cropCombo.getSelectionModel().selectFirst();
         fromDatePicker.setValue(LocalDate.now().minusDays(30));
         toDatePicker.setValue(LocalDate.now());
         User current = SessionContext.getCurrentUser();
@@ -46,9 +50,9 @@ public class MarketPriceController {
 
     @FXML
     public void onSave() {
-        marketPriceService.save(SessionContext.getCurrentUser(), districtCombo.getValue(), cropField.getText(),
+        marketPriceService.save(SessionContext.getCurrentUser(), districtCombo.getValue(), cropCombo.getValue(),
                 Double.parseDouble(priceField.getText()));
-        trendLabel.setText(marketPriceService.trendHint(districtCombo.getValue(), cropField.getText()));
+        trendLabel.setText(marketPriceService.trendHint(districtCombo.getValue(), cropCombo.getValue()));
         onHistory();
     }
 
@@ -56,7 +60,7 @@ public class MarketPriceController {
     public void onHistory() {
         StringBuilder sb = new StringBuilder();
         var list = marketPriceService.findHistory(fromDatePicker.getValue(), toDatePicker.getValue(),
-                cropField.getText());
+                cropCombo.getValue());
         if (list.isEmpty()) {
             sb.append("No market history found.");
         }
@@ -65,6 +69,6 @@ public class MarketPriceController {
                     .append(p.getCropType()).append(" | Rs ").append(p.getPricePerKg()).append("\n");
         }
         outputArea.setText(sb.toString());
-        trendLabel.setText(marketPriceService.trendHint(districtCombo.getValue(), cropField.getText()));
+        trendLabel.setText(marketPriceService.trendHint(districtCombo.getValue(), cropCombo.getValue()));
     }
 }

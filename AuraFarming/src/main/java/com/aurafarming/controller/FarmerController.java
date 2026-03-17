@@ -44,6 +44,22 @@ public class FarmerController {
         render(userService.search(Role.FARMER, searchField.getText()));
     }
 
+    @FXML
+    public void onReactivate() {
+        User current = SessionContext.getCurrentUser();
+        List<User> list = userService.search(Role.FARMER, searchField.getText());
+        if (list.isEmpty()) {
+            return;
+        }
+        User target = list.get(0);
+        if (current.getRole() == Role.FARMER && !current.getUserId().equalsIgnoreCase(target.getUserId())) {
+            outputArea.setText("Farmer can reactivate only own profile.");
+            return;
+        }
+        userService.reactivateUser(target.getUserId());
+        render(userService.search(Role.FARMER, searchField.getText()));
+    }
+
     private void render(List<User> users) {
         if (users.isEmpty()) {
             outputArea.setText("No farmer records.");

@@ -11,7 +11,7 @@
     <HBox spacing="8">
         <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
         <TextField fx:id="plotIdField" promptText="Plot ID"/>
-        <TextField fx:id="cropTypeField" promptText="Crop Type"/>
+        <ComboBox fx:id="cropCombo" promptText="Crop Type"/>
         <ComboBox fx:id="seasonCombo"/>
         <DatePicker fx:id="startDatePicker"/>
         <DatePicker fx:id="harvestDatePicker"/>

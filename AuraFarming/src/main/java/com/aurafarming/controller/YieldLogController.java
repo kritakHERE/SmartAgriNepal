@@ -1,6 +1,7 @@
 package com.aurafarming.controller;
 
 import com.aurafarming.model.District;
+import com.aurafarming.model.Role;
 import com.aurafarming.service.SessionContext;
 import com.aurafarming.service.YieldLogService;
 import javafx.collections.FXCollections;
@@ -10,6 +11,8 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 
 public class YieldLogController {
+    private static final String[] CROPS = { "Rice", "Wheat", "Mustard", "Maize", "Millet", "Vegetable" };
+
     @FXML
     private TextField farmerIdField;
     @FXML
@@ -17,7 +20,7 @@ public class YieldLogController {
     @FXML
     private ComboBox<District> districtCombo;
     @FXML
-    private TextField cropField;
+    private ComboBox<String> cropCombo;
     @FXML
     private TextField estimatedField;
     @FXML
@@ -33,6 +36,15 @@ public class YieldLogController {
     public void initialize() {
         districtCombo.setItems(FXCollections.observableArrayList(District.values()));
         districtCombo.getSelectionModel().selectFirst();
+        cropCombo.setItems(FXCollections.observableArrayList(CROPS));
+        cropCombo.getSelectionModel().selectFirst();
+
+        if (SessionContext.getCurrentUser().getRole() == Role.FARMER) {
+            farmerIdField.setDisable(true);
+            farmerIdField.setManaged(false);
+            farmerIdField.setVisible(false);
+        }
+
         harvestDatePicker.setValue(LocalDate.now());
         refresh();
     }
@@ -42,7 +54,7 @@ public class YieldLogController {
         String farmerId = farmerIdField.getText().isBlank() ? SessionContext.getCurrentUser().getUserId()
                 : farmerIdField.getText();
         yieldLogService.save(SessionContext.getCurrentUser(), farmerId, plotIdField.getText(), districtCombo.getValue(),
-                cropField.getText(),
+                cropCombo.getValue(),
                 Double.parseDouble(estimatedField.getText()), Double.parseDouble(actualField.getText()),
                 harvestDatePicker.getValue());
         refresh();

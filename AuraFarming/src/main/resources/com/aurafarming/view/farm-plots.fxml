@@ -11,7 +11,7 @@
     <HBox spacing="8">
         <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
         <ComboBox fx:id="districtCombo"/>
-        <TextField fx:id="unitField" promptText="Unit (ropani/hectare)"/>
+        <ComboBox fx:id="unitCombo" promptText="Farm Unit"/>
         <TextField fx:id="farmAreaField" promptText="Farm Area"/>
         <Button text="Create Farm" onAction="#onCreateFarm" styleClass="primary-btn"/>
     </HBox>

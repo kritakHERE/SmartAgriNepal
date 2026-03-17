@@ -10,12 +10,14 @@ import javafx.scene.control.*;
 import java.util.List;
 
 public class FarmPlotController {
+    private static final String[] FARM_UNITS = { "ROPANI", "HECTARE", "ACRE" };
+
     @FXML
     private TextField farmerIdField;
     @FXML
     private ComboBox<District> districtCombo;
     @FXML
-    private TextField unitField;
+    private ComboBox<String> unitCombo;
     @FXML
     private TextField farmAreaField;
     @FXML
@@ -31,6 +33,14 @@ public class FarmPlotController {
     public void initialize() {
         districtCombo.setItems(FXCollections.observableArrayList(District.values()));
         districtCombo.getSelectionModel().selectFirst();
+        unitCombo.setItems(FXCollections.observableArrayList(FARM_UNITS));
+        unitCombo.getSelectionModel().selectFirst();
+
+        if (SessionContext.getCurrentUser().getRole() == Role.FARMER) {
+            farmerIdField.setDisable(true);
+            farmerIdField.setManaged(false);
+            farmerIdField.setVisible(false);
+        }
         refresh();
     }
 
@@ -38,7 +48,7 @@ public class FarmPlotController {
     public void onCreateFarm() {
         User current = SessionContext.getCurrentUser();
         String farmerId = farmerIdField.getText().isBlank() ? current.getUserId() : farmerIdField.getText();
-        farmPlotService.createFarm(current, farmerId, districtCombo.getValue(), unitField.getText(),
+        farmPlotService.createFarm(current, farmerId, districtCombo.getValue(), unitCombo.getValue(),
                 Double.parseDouble(farmAreaField.getText()));
         refresh();
     }

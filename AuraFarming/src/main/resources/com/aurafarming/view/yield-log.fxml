@@ -12,7 +12,7 @@
         <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
         <TextField fx:id="plotIdField" promptText="Plot ID"/>
         <ComboBox fx:id="districtCombo"/>
-        <TextField fx:id="cropField" promptText="Crop"/>
+        <ComboBox fx:id="cropCombo" promptText="Crop"/>
     </HBox>
     <HBox spacing="8">
         <TextField fx:id="estimatedField" promptText="Estimated Kg"/>

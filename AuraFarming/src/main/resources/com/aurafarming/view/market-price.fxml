@@ -10,7 +10,7 @@
     <Label text="Market Price Management" styleClass="title"/>
     <HBox spacing="8">
         <ComboBox fx:id="districtCombo"/>
-        <TextField fx:id="cropField" promptText="Crop Type"/>
+        <ComboBox fx:id="cropCombo" promptText="Crop Type"/>
         <TextField fx:id="priceField" promptText="Price per kg"/>
         <Button fx:id="saveButton" text="Save" onAction="#onSave"/>
     </HBox>

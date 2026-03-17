@@ -52,4 +52,18 @@ public class UserService {
         }
         throw new ValidationException("User not found.");
     }
+
+    public void reactivateUser(String userId) {
+        List<User> users = userDAO.findAll();
+        for (User user : users) {
+            if (user.getUserId().equalsIgnoreCase(userId)) {
+                user.setActive(true);
+                userDAO.saveAll(users);
+                auditService.log(SessionContext.getCurrentUser(), "REACTIVATE_USER", "User", userId,
+                        "User reactivated.");
+                return;
+            }
+        }
+        throw new ValidationException("User not found.");
+    }
 }
