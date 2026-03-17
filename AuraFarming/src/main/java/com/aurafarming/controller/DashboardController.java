@@ -10,6 +10,9 @@ import com.aurafarming.util.SceneRouter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -27,6 +30,12 @@ public class DashboardController {
     private Label activeUsersLabel;
     @FXML
     private VBox moduleContainer;
+    @FXML
+    private PieChart userCompositionPie;
+    @FXML
+    private BarChart<String, Number> usersDistrictBar;
+    @FXML
+    private BarChart<String, Number> cropHarvestDistrictBar;
 
     @FXML
     private Button officersTab;
@@ -58,7 +67,20 @@ public class DashboardController {
             return;
         }
         refreshMetrics();
+        refreshCharts();
         applyRoleVisibility(user.getRole());
+        openDefaultModuleForRole(user.getRole());
+    }
+
+    private void openDefaultModuleForRole(Role role) {
+        if (role == Role.FARMER) {
+            onCropPlanTab();
+            return;
+        }
+        if (role == Role.OFFICER) {
+            onYieldTab();
+            return;
+        }
         onFarmersTab();
     }
 
@@ -81,11 +103,35 @@ public class DashboardController {
         activeUsersLabel.setText(String.valueOf(dashboardService.activeLast24Hours()));
     }
 
+    private void refreshCharts() {
+        userCompositionPie.getData().clear();
+        dashboardService.userCompositionByRole().forEach((name, count) -> {
+            userCompositionPie.getData().add(new PieChart.Data(name, count));
+        });
+
+        usersDistrictBar.getData().clear();
+        XYChart.Series<String, Number> usersByDistrictSeries = new XYChart.Series<>();
+        usersByDistrictSeries.setName("Users");
+        dashboardService.usersByDistrict().forEach((district, count) -> {
+            usersByDistrictSeries.getData().add(new XYChart.Data<>(district, count));
+        });
+        usersDistrictBar.getData().add(usersByDistrictSeries);
+
+        cropHarvestDistrictBar.getData().clear();
+        XYChart.Series<String, Number> cropHarvestSeries = new XYChart.Series<>();
+        cropHarvestSeries.setName("Harvest Kg");
+        dashboardService.cropHarvestByDistrict().forEach((district, totalKg) -> {
+            cropHarvestSeries.getData().add(new XYChart.Data<>(district, totalKg));
+        });
+        cropHarvestDistrictBar.getData().add(cropHarvestSeries);
+    }
+
     private void loadModule(String fxmlPath) {
         try {
             Parent module = FXMLLoader.load(getClass().getResource(fxmlPath));
             moduleContainer.getChildren().setAll(module);
             refreshMetrics();
+            refreshCharts();
         } catch (Exception ex) {
             AlertUtil.error("Module Load Error", ex.getMessage());
         }

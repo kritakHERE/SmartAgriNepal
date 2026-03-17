@@ -7,14 +7,15 @@
 <VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.aurafarming.controller.ExportController">
     <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
-    <Label text="Reporting and Export" styleClass="title"/>
+    <Label text="📤 Reporting and Export" styleClass="title"/>
     <HBox spacing="8">
         <ComboBox fx:id="reportTypeCombo"/>
         <DatePicker fx:id="fromDatePicker"/>
         <DatePicker fx:id="toDatePicker"/>
-        <TextField fx:id="districtField" promptText="District (optional)"/>
+        <ComboBox fx:id="districtCombo" promptText="District"/>
         <TextField fx:id="farmerField" promptText="Farmer ID (optional)"/>
+        <Button text="👁 Preview" onAction="#onPreview"/>
         <Button text="Export CSV" onAction="#onExport" styleClass="primary-btn"/>
     </HBox>
-    <TextArea fx:id="outputArea" prefHeight="320" promptText="Export result path will show here." editable="false"/>
+    <TextArea fx:id="outputArea" prefHeight="320" promptText="Preview appears here before export." editable="false"/>
 </VBox>

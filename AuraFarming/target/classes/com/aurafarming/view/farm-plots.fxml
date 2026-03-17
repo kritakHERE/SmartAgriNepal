@@ -7,21 +7,21 @@
 <VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.aurafarming.controller.FarmPlotController">
     <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
-    <Label text="Farm and Plot Management" styleClass="title"/>
+    <Label text="🌾 Farm and Plot Management" styleClass="title"/>
     <HBox spacing="8">
         <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
         <ComboBox fx:id="districtCombo"/>
         <ComboBox fx:id="farmTagCombo" promptText="Farm Tag"/>
         <ComboBox fx:id="unitCombo" promptText="Farm Unit"/>
         <TextField fx:id="farmAreaField" promptText="Farm Area"/>
-        <Button text="Create Farm" onAction="#onCreateFarm" styleClass="primary-btn"/>
+        <Button text="➕ Create Farm" onAction="#onCreateFarm" styleClass="primary-btn"/>
     </HBox>
     <HBox spacing="8">
         <ComboBox fx:id="farmCombo" promptText="Select Farm"/>
         <ComboBox fx:id="plotCombo" promptText="Existing Plots"/>
         <TextField fx:id="plotAreaField" promptText="Plot Area"/>
-        <Button text="Create Plot" onAction="#onCreatePlot"/>
-        <Button text="Delete Farm" onAction="#onDeleteFarm"/>
+        <Button text="➕ Create Plot" onAction="#onCreatePlot"/>
+        <Button text="🗑 Delete Farm" onAction="#onDeleteFarm"/>
     </HBox>
     <TextArea fx:id="outputArea" prefHeight="320" editable="false"/>
 </VBox>

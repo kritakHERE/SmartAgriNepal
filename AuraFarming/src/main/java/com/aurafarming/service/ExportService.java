@@ -1,6 +1,9 @@
 package com.aurafarming.service;
 
 import com.aurafarming.dto.ExportRequestDTO;
+import com.aurafarming.dao.FarmDAO;
+import com.aurafarming.dao.PlotDAO;
+import com.aurafarming.exception.ValidationException;
 import com.aurafarming.model.*;
 import com.aurafarming.util.FileUtil;
 
@@ -12,9 +15,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExportService {
     private final AuditService auditService = new AuditService();
+    private final FarmDAO farmDAO = new FarmDAO();
+    private final PlotDAO plotDAO = new PlotDAO();
     private final YieldLogService yieldLogService = new YieldLogService();
     private final MarketPriceService marketPriceService = new MarketPriceService();
     private final CropPlanService cropPlanService = new CropPlanService();
@@ -24,12 +30,7 @@ public class ExportService {
         String fileName = request.reportType() + "_" + timestamp + ".csv";
         Path output = FileUtil.resolveExportFile(fileName);
 
-        List<String> lines = switch (request.reportType()) {
-            case "audit" -> exportAudit(request.fromDate(), request.toDate(), actor.getRole());
-            case "yield" -> exportYield(actor);
-            case "market" -> exportMarket(request.fromDate(), request.toDate());
-            default -> exportCropPlan();
-        };
+        List<String> lines = buildExportLines(actor, request);
 
         try {
             Files.write(output, lines);
@@ -39,6 +40,40 @@ public class ExportService {
 
         auditService.log(actor, "EXPORT_REPORT", "Export", output.getFileName().toString(), "Export generated.");
         return output;
+    }
+
+    public List<String> preview(User actor, ExportRequestDTO request, int maxRows) {
+        List<String> lines = buildExportLines(actor, request);
+        int safeMax = Math.max(maxRows, 2);
+        if (lines.size() <= safeMax) {
+            return lines;
+        }
+        List<String> preview = new ArrayList<>(lines.subList(0, safeMax));
+        preview.add("... " + (lines.size() - safeMax) + " more rows");
+        return preview;
+    }
+
+    private List<String> buildExportLines(User actor, ExportRequestDTO request) {
+        String requestedType = request.reportType() == null ? "" : request.reportType().trim().toLowerCase();
+        String effectiveFarmerId = request.farmerId();
+        if (actor.getRole() == Role.FARMER) {
+            if (!requestedType.equals("plot") && !requestedType.equals("crop-plan")) {
+                throw new ValidationException("Farmers can export only Plot and Crop Plan reports.");
+            }
+            if (effectiveFarmerId != null && !effectiveFarmerId.isBlank()
+                    && !effectiveFarmerId.equalsIgnoreCase(actor.getUserId())) {
+                throw new ValidationException("Farmers can export only their own records.");
+            }
+            effectiveFarmerId = actor.getUserId();
+        }
+
+        return switch (requestedType) {
+            case "audit" -> exportAudit(request.fromDate(), request.toDate(), actor.getRole());
+            case "yield" -> exportYield(actor);
+            case "market" -> exportMarket(request.fromDate(), request.toDate());
+            case "plot" -> exportPlot(effectiveFarmerId);
+            default -> exportCropPlan(effectiveFarmerId);
+        };
     }
 
     private List<String> exportAudit(LocalDate from, LocalDate to, Role role) {
@@ -72,15 +107,46 @@ public class ExportService {
         return lines;
     }
 
-    private List<String> exportCropPlan() {
+    private List<String> exportCropPlan(String farmerId) {
         List<String> lines = new ArrayList<>();
         lines.add("planId,farmerId,plotId,cropType,season,recommendationScore,startDate,expectedHarvestDate");
-        for (CropPlan p : cropPlanService.findAll()) {
+        List<CropPlan> visiblePlans = cropPlanService.findAll().stream()
+                .filter(p -> farmerId == null || farmerId.isBlank() || p.getFarmerId().equalsIgnoreCase(farmerId))
+                .collect(Collectors.toList());
+        for (CropPlan p : visiblePlans) {
             lines.add(String.join(",", p.getPlanId(), p.getFarmerId(), p.getPlotId(), p.getCropType(),
-                    p.getSeason().name(),
+                    p.getSeason().toString(),
                     String.valueOf(p.getRecommendationScore()), p.getStartDate().toString(),
                     p.getExpectedHarvestDate().toString()));
         }
+        return lines;
+    }
+
+    private List<String> exportPlot(String farmerId) {
+        List<String> lines = new ArrayList<>();
+        lines.add("farmId,farmerId,district,farmTag,unit,farmArea,plotId,plotCode,plotArea");
+
+        List<Farm> farms = farmDAO.findAll().stream()
+                .filter(f -> farmerId == null || farmerId.isBlank() || f.getFarmerId().equalsIgnoreCase(farmerId))
+                .collect(Collectors.toList());
+
+        for (Farm farm : farms) {
+            List<Plot> farmPlots = plotDAO.findAll().stream()
+                    .filter(p -> p.getFarmId().equalsIgnoreCase(farm.getFarmId()))
+                    .collect(Collectors.toList());
+            if (farmPlots.isEmpty()) {
+                lines.add(String.join(",", farm.getFarmId(), farm.getFarmerId(), farm.getDistrict().name(),
+                        safe(farm.getFarmTag()), safe(farm.getMeasurementUnit()), String.valueOf(farm.getTotalArea()),
+                        "", "", ""));
+                continue;
+            }
+            for (Plot plot : farmPlots) {
+                lines.add(String.join(",", farm.getFarmId(), farm.getFarmerId(), farm.getDistrict().name(),
+                        safe(farm.getFarmTag()), safe(farm.getMeasurementUnit()), String.valueOf(farm.getTotalArea()),
+                        plot.getPlotId(), safe(plot.getPlotCode()), String.valueOf(plot.getArea())));
+            }
+        }
+
         return lines;
     }
 

@@ -7,7 +7,7 @@
 <VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.aurafarming.controller.CropPlanController">
     <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
-    <Label text="Crop Planning and Advisory" styleClass="title"/>
+    <Label text="🌱 Crop Planning and Advisory" styleClass="title"/>
     <HBox spacing="8">
         <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
         <ComboBox fx:id="plotCombo" promptText="Select Plot"/>
@@ -17,8 +17,8 @@
         <DatePicker fx:id="harvestDatePicker"/>
     </HBox>
     <HBox spacing="8">
-        <Button text="Recommend" onAction="#onRecommend"/>
-        <Button text="Save Plan" onAction="#onSave" styleClass="primary-btn"/>
+        <Button text="🧠 Recommend" onAction="#onRecommend"/>
+        <Button text="💾 Save Plan" onAction="#onSave" styleClass="primary-btn"/>
         <Label fx:id="recommendationLabel" text="Score: -"/>
     </HBox>
     <TextArea fx:id="outputArea" prefHeight="300" promptText="Recommendation badge and plan result will appear here." editable="false"/>
