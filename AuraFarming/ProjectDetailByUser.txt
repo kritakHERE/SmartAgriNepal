@@ -1,0 +1,55 @@
+there are 3 actors in this system, Admin(1, predefined), Officers, Farmers.
+each have their domain of responsibility, 
+an admin will manage the users ( farmers and officers generally called users ), they can search for user details, they can change user password, they can see farms, plots, market prices, anything that other two can do, admin can do as well plus, user management, view audit log (log in and out and activity logs like farm creation and plot, crop planting) and harvesting logs (farmer and their harvest, with date, plot involved) export reports of those logs as charts, pichart, graphs, etc, or plain text file, 
+an officer cannot manage other officers, they can manage farmers their plots, etc, often an ofline request from farmers who are less educated, they can set market price, create weather alert, exxport reports like harvest, farmplot and crop plantation details, but not user details, they can how ever change farmer credentials but not export such data like login data, only admin can do that.
+a farmer can plan crops (selecting farm and plot number along with district, and selecting crops they plan to plant on that plot, the selection is dropdown, or combobox), they can view weather alert in an enhanced gui, but cannot edit or add them self, similarly with market price as well, and they can create harvest, they select the farm and plot then they type quantity in kilograms, select date frame, and estimated harvest quantity, there are 2 quantity, estimated vs actual harvested quantity.)
+first scene is registeration, users are required to register if they have not yet registered, if they have already registered, they can click "login instead" to login instead. 
+in registration section, user enput their full name, email, password, confirm password, role(farmer or officer), since admin is 1 and embedded in the system (admin@control.com, pass: "admin123"), 
+they all access dashboard that displays in saperate boxes or card components, total number of farmers, total number of officers, total yield this season(start of the season  to today's date), total yield this year(start of the year jan 1, to today's date) from yieldlog file, active users in 24 hours. 
+login asks email and password, and they are given access as per role saved in user file.
+
+
+
+
+the selection options like dashboard, farmers, officers, market price, weather alert, audit log, yield log, export, farmplots, crop plan are at top of the scene, they are like tabs in browsers
+when clicked one, that scene gets loaded, while that clicked option is highlited.
+
+
+only farmer options(market price on view only, weather alert view only, yield log view and edit of self only, farm and plot creation and deletion based on district, crop planning based on season and plot selection)
+only for officer, farmer + login only audit logs, yield log, export yield and market price history based on time duration selected)
+admin, officer + edit officer and see their credentials, audit log full access, yield log, full access, everything on prevellage mode)
+
+the scene is divided into left and right for scenes other then dashboard, left for controls and right for result display. 
+
+here are more description of remaining scenes:
+officers section after dashboard:
+search officer by name, email or id, in saperate fields, then we search, get the full data, the name, email, password, and we can change things other then id, and hit update, a confirmation pops up, confirm or cancel, then on right, we have detail of all officer, but not passwords
+
+farmers after officers:
+same as officer but for farmers
+
+market price:
+select district with drop down, selelect crop with drop down, enter price field per kg, 
+save button(disabled for farmers), view marked detail (shows latest price of that crop), compare(compares current price with other district price), view history, shows the crop price history in that district. right side shows all crop history logs.
+bottom left section, for result
+
+weather alert, having various weather conditions drop down, seviriority of the hazard, affected duration in days, probability percentage.
+audit log with all audit on right, and filters on left side, like user id, or email search, or date durations. etc.
+
+yield log, right side only shows farmer's own yield log, but for admin and officer, it shows all harvests in the system, left side shows the controls, etc, search by district, or farmer, time duration, etc
+
+exports, has all export features, like audit logs, yield logs, price history, and we have controls, how many data, time duration, filters, etc.
+
+farm plots,
+select a district, create a farm, select measurement unit in nepali context, ask quantity, add farm and number of plots, then we can refer them to as Ffn_Ppn, where fn refers to farm number, and pn refers to plot number of that farmers
+they can select a farm or plot and edit or delete it in this scene
+
+crop plans:
+select district, Ffn_Ppn, crop, seasion(also show recomendation score based on season and crop match or mismatch), 
+recomendation button to get recomendation score, add crop button, date selection, estimated harvest duration selection
+
+time duration has 2 dates, From __ and To __ 
+
+admin can change role of users.
+
+we will use javaFx, with only .fxml for view, controllers, modules, follow dao, dto practices, javafx version 25.0.0. 
