@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.aurafarming.controller.FarmPlotController">
+    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+    <Label text="Farm and Plot Management" styleClass="title"/>
+    <HBox spacing="8">
+        <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
+        <ComboBox fx:id="districtCombo"/>
+        <TextField fx:id="unitField" promptText="Unit (ropani/hectare)"/>
+        <TextField fx:id="farmAreaField" promptText="Farm Area"/>
+        <Button text="Create Farm" onAction="#onCreateFarm" styleClass="primary-btn"/>
+    </HBox>
+    <HBox spacing="8">
+        <TextField fx:id="farmIdForPlotField" promptText="Farm ID for plot / delete"/>
+        <TextField fx:id="plotAreaField" promptText="Plot Area"/>
+        <Button text="Create Plot" onAction="#onCreatePlot"/>
+        <Button text="Delete Farm" onAction="#onDeleteFarm"/>
+    </HBox>
+    <TextArea fx:id="outputArea" prefHeight="320"/>
+</VBox>

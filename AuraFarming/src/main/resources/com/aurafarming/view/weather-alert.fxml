@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.aurafarming.controller.WeatherAlertController">
+    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+    <Label text="Weather Risk Alerts" styleClass="title"/>
+    <HBox spacing="8">
+        <ComboBox fx:id="districtCombo"/>
+        <ComboBox fx:id="conditionCombo"/>
+        <ComboBox fx:id="severityCombo"/>
+        <TextField fx:id="durationField" promptText="Duration days"/>
+        <TextField fx:id="probabilityField" promptText="Probability %"/>
+        <Button fx:id="saveButton" text="Save Alert" onAction="#onSave"/>
+    </HBox>
+    <TextArea fx:id="outputArea" prefHeight="320"/>
+</VBox>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.aurafarming.controller.AuditLogController">
+    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+    <Label text="Audit Log" styleClass="title"/>
+    <HBox spacing="8">
+        <TextField fx:id="userKeywordField" promptText="Actor id/email keyword"/>
+        <TextField fx:id="actionField" promptText="Action type (or ALL)"/>
+        <DatePicker fx:id="fromDatePicker"/>
+        <DatePicker fx:id="toDatePicker"/>
+        <Button text="Filter" onAction="#onFilter"/>
+    </HBox>
+    <TextArea fx:id="outputArea" prefHeight="320"/>
+</VBox>

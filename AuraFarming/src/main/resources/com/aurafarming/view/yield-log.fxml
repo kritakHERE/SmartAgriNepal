@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.aurafarming.controller.YieldLogController">
+    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+    <Label text="Yield Logging" styleClass="title"/>
+    <HBox spacing="8">
+        <TextField fx:id="farmerIdField" promptText="Farmer ID (optional for own)"/>
+        <TextField fx:id="plotIdField" promptText="Plot ID"/>
+        <ComboBox fx:id="districtCombo"/>
+        <TextField fx:id="cropField" promptText="Crop"/>
+    </HBox>
+    <HBox spacing="8">
+        <TextField fx:id="estimatedField" promptText="Estimated Kg"/>
+        <TextField fx:id="actualField" promptText="Actual Kg"/>
+        <DatePicker fx:id="harvestDatePicker"/>
+        <Button text="Save Yield" onAction="#onSave" styleClass="primary-btn"/>
+    </HBox>
+    <TextArea fx:id="outputArea" prefHeight="320"/>
+</VBox>

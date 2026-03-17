@@ -1,8 +1,11 @@
-module com.example.aurafarming {
+module com.aurafarming {
     requires javafx.controls;
     requires javafx.fxml;
+    requires transitive javafx.graphics;
 
+    opens com.aurafarming to javafx.fxml;
+    opens com.aurafarming.controller to javafx.fxml;
 
-    opens com.example.aurafarming to javafx.fxml;
-    exports com.example.aurafarming;
+    exports com.aurafarming;
+    exports com.aurafarming.model;
 }

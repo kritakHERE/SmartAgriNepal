@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.aurafarming.controller.MarketPriceController">
+    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+    <Label text="Market Price Management" styleClass="title"/>
+    <HBox spacing="8">
+        <ComboBox fx:id="districtCombo"/>
+        <TextField fx:id="cropField" promptText="Crop Type"/>
+        <TextField fx:id="priceField" promptText="Price per kg"/>
+        <Button fx:id="saveButton" text="Save" onAction="#onSave"/>
+    </HBox>
+    <HBox spacing="8">
+        <DatePicker fx:id="fromDatePicker"/>
+        <DatePicker fx:id="toDatePicker"/>
+        <Button text="View History" onAction="#onHistory"/>
+        <Label fx:id="trendLabel" text="Trend: -"/>
+    </HBox>
+    <TextArea fx:id="outputArea" prefHeight="320"/>
+</VBox>

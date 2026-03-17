@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.aurafarming.controller.DashboardController" styleClass="page-root">
+    <top>
+        <VBox spacing="8">
+            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+            <HBox spacing="8">
+                <Button fx:id="officersTab" text="Officers" onAction="#onOfficersTab"/>
+                <Button fx:id="farmersTab" text="Farmers" onAction="#onFarmersTab"/>
+                <Button fx:id="farmPlotsTab" text="Farm &amp; Plot" onAction="#onFarmPlotsTab"/>
+                <Button fx:id="cropPlanTab" text="Crop Plan" onAction="#onCropPlanTab"/>
+                <Button fx:id="marketTab" text="Market" onAction="#onMarketTab"/>
+                <Button fx:id="weatherTab" text="Weather" onAction="#onWeatherTab"/>
+                <Button fx:id="yieldTab" text="Yield" onAction="#onYieldTab"/>
+                <Button fx:id="auditTab" text="Audit" onAction="#onAuditTab"/>
+                <Button fx:id="exportTab" text="Export" onAction="#onExportTab"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Logout" onAction="#onLogout"/>
+            </HBox>
+            <HBox spacing="10">
+                <VBox styleClass="metric-card"><Label text="Total Farmers"/><Label fx:id="totalFarmersLabel"/></VBox>
+                <VBox styleClass="metric-card"><Label text="Total Officers"/><Label fx:id="totalOfficersLabel"/></VBox>
+                <VBox styleClass="metric-card"><Label text="Yield This Season"/><Label fx:id="seasonYieldLabel"/></VBox>
+                <VBox styleClass="metric-card"><Label text="Yield This Year"/><Label fx:id="yearYieldLabel"/></VBox>
+                <VBox styleClass="metric-card"><Label text="Active in 24h"/><Label fx:id="activeUsersLabel"/></VBox>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox fx:id="moduleContainer" spacing="8" styleClass="module-root">
+            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+        </VBox>
+    </center>
+</BorderPane>
